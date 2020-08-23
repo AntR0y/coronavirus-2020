@@ -2,7 +2,7 @@
 Experiment summary
 ------------------
 Treat each province/state in a country cases over time
-as a vector, do a simple K-Nearest Neighbor between 
+as a vector, do a simple K-Nearest Neighbor between
 countries. What country has the most similar trajectory
 to a given country?
 """
@@ -28,9 +28,9 @@ NORMALIZE = True
 # ------------------------------------------
 
 confirmed = os.path.join(
-    BASE_PATH, 
+    BASE_PATH,
     'csse_covid_19_time_series',
-    'time_series_19-covid-Confirmed.csv')
+    'time_series_covid19_confirmed_global.csv')
 confirmed = data.load_csv_data(confirmed)
 features = []
 targets = []
@@ -73,7 +73,7 @@ for _dist in ['minkowski', 'manhattan']:
         cases = cases.sum(axis=0, keepdims=True)
         # nearest country to this one based on trajectory
         label = knn.predict(cases)
-        
+
         if val not in predictions:
             predictions[val] = {}
         predictions[val][_dist] = label.tolist()

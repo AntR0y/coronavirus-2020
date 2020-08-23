@@ -2,7 +2,7 @@
 Experiment summary
 ------------------
 Treat each province/state in a country cases over time
-as a vector, do a simple K-Nearest Neighbor between 
+as a vector, do a simple K-Nearest Neighbor between
 countries. Take the difference between cases. Get
 the distribution of this data (to make it time-invariant).
 Use the distribution as the feature vector.
@@ -30,9 +30,9 @@ NORMALIZE = True
 # ------------------------------------------
 
 confirmed = os.path.join(
-    BASE_PATH, 
+    BASE_PATH,
     'csse_covid_19_time_series',
-    'time_series_19-covid-Confirmed.csv')
+    'time_series_covid19_confirmed_global.csv')
 confirmed = data.load_csv_data(confirmed)
 features = []
 targets = []
@@ -63,12 +63,12 @@ for _dist in ['minkowski', 'manhattan']:
 
         above_min_cases = tr_features.sum(axis=-1) > MIN_CASES
         tr_features = np.diff(tr_features[above_min_cases], axis=-1)
-        
+
         if NORMALIZE:
             tr_features = tr_features / tr_features.sum(axis=-1, keepdims=True)
         tr_features = np.apply_along_axis(
             lambda a: np.histogram(a, bins=N_BINS)[0], -1, tr_features)
-        
+
         tr_targets = tr_targets[above_min_cases]
 
         # train knn
@@ -81,7 +81,7 @@ for _dist in ['minkowski', 'manhattan']:
             lambda a: np.histogram(a, bins=N_BINS)[0], -1, cases)
         # nearest country to this one based on trajectory
         label = knn.predict(cases)
-        
+
         if val not in predictions:
             predictions[val] = {}
         predictions[val][_dist] = label.tolist()
