@@ -49,6 +49,7 @@ for val in np.unique(confirmed["Province_State"]):
     if cases.sum() > MIN_CASES:
         NUM_COLORS += 1
 
+print(NUM_COLORS)
 colors = [cm(i) for i in np.linspace(0, 1, NUM_COLORS)]
 legend = []
 handles = []

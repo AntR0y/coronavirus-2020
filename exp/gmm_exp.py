@@ -19,7 +19,7 @@ import json
 import matplotlib.pyplot as plt
 
 from scipy.signal import savgol_filter
-from src import KMeans
+from src import GMM
 
 plt.style.use('fivethirtyeight')
 
@@ -53,6 +53,8 @@ for val in np.unique(confirmed["Province_State"]):
         features = np.vstack((features, cases))
     if val != 'Diamond Princess' and val != 'Grand Princess':
         targets = np.append(targets, labels[0])
+
+print(features.shape)
 
 # Smooth STATE progession curves and compute second derivative
 # Idea to use a Savitsky-Golay filter comes from this stackoverflow page:
@@ -92,6 +94,7 @@ for val in np.unique(confirmed["FIPS"]):
     elif not math.isnan(val):
         #print(val)
         county_cases = np.vstack((county_cases, cases))
+print(county_cases.shape)
 
 # Smooth data and compute second derivative of county data
 # Idea to use a Savitsky-Golay filter comes from this stackoverflow page:
@@ -186,6 +189,7 @@ for col in range(data2.shape[1]):
         if data2[state,col] == 0:
             data2[state,col] = avg
 
+
 data = np.concatenate((data1, data2), axis=1)
 #print(data1.shape)
 #print(data2.shape)
@@ -270,9 +274,9 @@ print(county_data2.shape)
 print(county_data.shape)
 
 
-kmeans_learner = KMeans(2)
-kmeans_learner.fit(county_data)
-labels = kmeans_learner.predict(data)
+gmm_learner = GMM(2, 'diagonal')
+gmm_learner.fit(county_data)
+labels = gmm_learner.predict(data)
 cluster4 = features[labels == 4,:]
 cluster3 = features[labels == 3,:]
 cluster2 = features[labels == 2,:]
@@ -304,7 +308,7 @@ ax.set_xlabel("Time (days since Jan 22, 2020)")
 
 plt.legend(handles, legend, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=4)
 plt.tight_layout()
-plt.savefig('results4/exp1 - cluster 0.png')
+plt.savefig('results5/exp1 - cluster 0.png')
 ###
 
 ###
@@ -326,7 +330,7 @@ ax.set_xlabel("Time (days since Jan 22, 2020)")
 
 plt.legend(handles, legend, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=4)
 plt.tight_layout()
-plt.savefig('results4/exp1 - cluster 1.png')
+plt.savefig('results5/exp1 - cluster 1.png')
 ###
 """
 ###
@@ -348,7 +352,7 @@ ax.set_xlabel("Time (days since Jan 22, 2020)")
 
 plt.legend(handles, legend, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=4)
 plt.tight_layout()
-plt.savefig('results4/exp4 - cluster 2.png')
+plt.savefig('results6/exp2 - cluster 2.png')
 ###
 
 ###
@@ -370,11 +374,10 @@ ax.set_xlabel("Time (days since Jan 22, 2020)")
 
 plt.legend(handles, legend, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=4)
 plt.tight_layout()
-plt.savefig('results4/exp4 - cluster 3.png')
+plt.savefig('results5/exp3 - cluster 3.png')
 ###
 
 ###
-
 NUM_COLORS = cluster4.shape[0]
 colors = [cm(i) for i in np.linspace(0, 1, NUM_COLORS)]
 legend = []
@@ -393,12 +396,11 @@ ax.set_xlabel("Time (days since Jan 22, 2020)")
 
 plt.legend(handles, legend, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=4)
 plt.tight_layout()
-plt.savefig('results4/exp4 - cluster 4.png')
-
+plt.savefig('results6/exp4 - cluster 4.png')
 ###
+"""
 
-
-
+"""
 
 fig = plt.figure(figsize=(12, 12))
 ax = fig.add_subplot(111)
